@@ -1,3 +1,14 @@
+# manully set ignored
+.vs
+x64
+leetcode_2022/x64
+leetcode_2022/*.vcxproj
+leetcode_2022/*filters
+leetcode_2022/*.user
+
+*.sln
+
+
 # Prerequisites
 *.d
 
