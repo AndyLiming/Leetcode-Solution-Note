@@ -140,4 +140,52 @@ public:
     }
     return ans;
   }
+  //2022.09.10 - No 669
+  TreeNode* trimBST(TreeNode* root, int low, int high) {
+    if (!root) return nullptr;
+    if (root->val < low) return trimBST(root->right, low, high);
+    else if (root->val > high) return trimBST(root->left, low, high);
+    else {
+      root->left = trimBST(root->left, low, high);
+      root->right = trimBST(root->right, low, high);
+    }
+    return root;
+  }
+  //2022.09.11 - No 857
+  double mincostToHireWorkers(vector<int>& quality, vector<int>& wage, int k) {
+    int n = quality.size();
+    vector<int> h(n, 0);
+    iota(h.begin(), h.end(), 0);
+    sort(h.begin(), h.end(), [&](int& a, int& b) {
+      return quality[a] * wage[b] > quality[b] * wage[a];
+    });
+    double res = 1e9;
+    double totalq = 0.0;
+    priority_queue<int, vector<int>, less<int>> q;
+    for (int i = 0; i < k - 1; i++) {
+      totalq += quality[h[i]];
+      q.push(quality[h[i]]);
+    }
+    for (int i = k - 1; i < n; i++) {
+      int idx = h[i];
+      totalq += quality[idx];
+      q.push(quality[idx]);
+      double totalc = ((double)wage[idx] / quality[idx]) * totalq;
+      res = min(res, totalc);
+      totalq -= q.top();
+      q.pop();
+    }
+    return res;
+  }
+  //2022.09.12 - No 1608
+  int specialArray(vector<int>& nums) {
+    sort(nums.begin(), nums.end());
+    int n = nums.size();
+    for (int x = 0; x <= nums[n - 1]; ++x) {
+      auto pos = lower_bound(nums.begin(), nums.end(), x);
+      int count = (nums.end() - pos);
+      if (count == x) return x;
+    }
+    return -1;
+  }
 };
