@@ -87,4 +87,61 @@ public:
     }
     return r;
   }
+
+  int mostFrequentEven(vector<int>& nums) {
+    map<int, int>m;
+    for (auto& k : nums) {
+      if (k % 2 == 0) {
+        if (m.find(k) == m.end()) m[k] = 1;
+        else m[k]++;
+      }
+    }
+    int ans = -1,times=0;
+    for (auto it = m.begin(); it != m.end(); ++it) {
+      if (it->second > times) {
+        ans = it->first;
+        times = it->second;
+      }
+    }
+    return ans;
+  }
+  int partitionString(string s) {
+    int ans = 0;
+    vector<int>count(26, 0);
+    for (int i = 0; i < s.size(); ++i) {
+      if (count[s[i]-'a'] == 0) count[s[i] - 'a']++;
+      else {
+        ++ans;
+        for (int j = 0; j < 26; ++j) count[j] = 0;
+        count[s[i] - 'a']++;
+      }
+    }
+    for (int j = 0; j < 26; ++j) {
+      if (count[j] > 0) {
+        ++ans;
+        break;
+      }
+    }
+    return ans;
+  }
+  int minGroups(vector<vector<int>>& intervals) {
+    sort(intervals.begin(), intervals.end(), [](const vector<int>& v1, const vector<int>& v2) {return (v1[0] < v2[0]) || (v1[0] == v2[0] && v1[1] < v2[1]); });
+    vector<int>endNum;
+    endNum.push_back(intervals[0][1]);
+    for (int i = 1; i < intervals.size(); ++i) {
+      sort(endNum.begin(), endNum.end());
+      bool flag = false;
+      for (int j = 0; j < endNum.size(); ++j) {
+        if (intervals[i][0] > endNum[j]) {
+          endNum[j] = intervals[i][1];
+          flag = true;
+        }
+      }
+      if (!flag) { endNum.push_back(intervals[i][1]); }
+    }
+    return endNum.size();
+  }
+  int lengthOfLIS(vector<int>& nums, int k) {
+
+  }
 };

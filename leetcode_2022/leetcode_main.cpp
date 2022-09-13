@@ -11,10 +11,10 @@ int main() {
 
   //lc weekyly 20220904 *weeklySolution*
 
-  auto check = solve(&weeklySolution::redNum);
+  /*auto check = solve(&weeklySolution::redNum);
 
   check(2, "reddee");
-  check(2, "derre");
+  check(2, "derre");*/
 
 }
 Settings;
