@@ -188,4 +188,36 @@ public:
     }
     return -1;
   }
+  //2022.09.13 - No 670
+  int maximumSwap(int num) {
+    vector<int>dig;
+    int tmp = num;
+    while (tmp) {
+      dig.push_back(tmp % 10);
+      tmp /= 10;
+    }
+    reverse(dig.begin(), dig.end());
+    for (int i = 0; i < dig.size(); ++i) {
+      bool s = false;
+      int md = -1,id=-1;
+      for (int j = i + 1; j < dig.size(); ++j) {
+        if (dig[j] > dig[i] && dig[j] >= md) {
+          md = dig[j];
+          id = j;
+        }
+      }
+      if (md != -1) {
+        int tmp = dig[i];
+        dig[i] = dig[id];
+        dig[id] = tmp;
+        break;
+      }
+    }
+    int ans = 0;
+    for (int i = 0; i < dig.size(); ++i) {
+      ans *= 10;
+      ans += dig[i];
+    }
+    return ans;
+  }
 };
