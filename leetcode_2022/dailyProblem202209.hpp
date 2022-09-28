@@ -380,4 +380,55 @@ public:
     }
     return cnt;
   }
+  //2022.9.26 - No mianshi 17.19
+  vector<int> missingTwo(vector<int>& nums) {
+    int xorS = 0;
+    for (auto num : nums) xorS ^= num;
+    for (int i = 1; i <= nums.size() + 2; ++i) xorS ^= i;
+    int check = (xorS == INT_MIN ? xorS : xorS & (-xorS));
+    int n1 = 0, n2 = 0;
+    for (int num : nums) {
+      if (num & check) {
+        n1 ^= num;
+      }
+      else {
+        n2 ^= num;
+      }
+    }
+    for (int i = 1; i <= nums.size() + 2; i++) {
+      if (i & check) {
+        n1 ^= i;
+      }
+      else {
+        n2 ^= i;
+      }
+    }
+    return { n1, n2 };
+  }
+  //2022.9.27 - No mianshi 01.02
+  bool CheckPermutation(string s1, string s2) {
+    unordered_map<char, int>tab;
+    for (auto c : s1) {
+      tab[c]++;
+    }
+    for (auto c : s2) {
+      if (!tab.count(c) || tab[c] == 0) return false;
+      else --tab[c];
+    }
+    return true;
+  }
+  //2022.9.28 - No mianshi 01.02
+  int getKthMagicNumber(int k) {
+    vector<int>res;
+    res.push_back(1);
+    int id3 = 0, id5 = 0, id7 = 0;
+    for (int i = 1; i < k; ++i) {
+      int cur = min(min(res[id3] * 3, res[id5] * 5), res[id7] * 7);
+      res.push_back(cur);
+      if (cur == res[id3] * 3) ++id3;
+      if (cur == res[id5] * 5)++id5;
+      if (cur == res[id7] * 7)++id7;
+    }
+    return res.back();
+  }
 };
