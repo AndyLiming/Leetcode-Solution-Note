@@ -170,3 +170,23 @@ double cal_iou(double ya, double ha, double wa1, double wa2, double yb, double h
   double area_a = area_tixing(wa1, wa2, ha),area_b=area_tixing(wb1,wb2,hb);
   return inter_area / (area_a + area_b - inter_area);
 }
+
+
+int cnt = 0;
+void dfs(int number, int n, int location, int sum,vector<int>& nums) {//第一个参数为当前因子的大小。
+  if (sum == n&& nums.size()>1) {
+    for (int j = 1; j < nums.size(); ++j) {
+      if (nums[j] != nums[0]) {
+        ++cnt;
+        break;
+      }
+    }
+    return;
+  }
+  if (sum > n) return;
+  for (int i = number; i < n; ++i) {
+    nums.push_back(i);
+    dfs(i, n, location + 1, sum + i, nums);
+    nums.pop_back();
+  }
+}
