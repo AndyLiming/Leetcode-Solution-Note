@@ -431,4 +431,29 @@ public:
     }
     return res.back();
   }
+  //2022.9.29 - No mianshi 01.09
+  bool isFlipedString(string s1, string s2) {
+    string s1s1 = s1 + s1;
+    return (s1.size() == s2.size() && s1s1.find(s2) != string::npos);
+  }
+  //2022.9.30 - No mianshi 01.08
+  void setZeroes(vector<vector<int>>& matrix) {
+    int n = matrix.size(), m = matrix[0].size();
+    unordered_set<int>rows, cols;
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+        if (matrix[i][j] == 0) {
+          rows.insert(i);
+          cols.insert(j);
+        }
+      }
+    }
+    for (int i = 0; i < n; ++i) {
+      for (int j = 0; j < m; ++j) {
+        if(rows.find(i)!=rows.end() || cols.find(j)!=cols.end()){
+          matrix[i][j] = 0;
+        }
+      }
+    }
+  }
 };
