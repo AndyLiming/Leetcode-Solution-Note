@@ -51,4 +51,17 @@ public:
     //return cnt <= 1;
     return s.find("01") == string::npos;
   }
+  // 2022.10.04 - No 921
+  int minAddToMakeValid(string s) {
+    int ans = 0, cnt = 0;
+    for (auto c : s) {
+      if (c == '(') { ++cnt; }
+      else {
+        if (cnt > 0)--cnt;
+        else ++ans;
+      }
+    }
+    ans += cnt;
+    return ans;
+  }
 };
