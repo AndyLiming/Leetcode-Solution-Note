@@ -64,4 +64,64 @@ public:
     ans += cnt;
     return ans;
   }
+  // 2022.10.05 - No 811
+  vector<string> subdomainVisits(vector<string>& cpdomains) {
+    unordered_map<string, int>tab;
+    for (auto& dom : cpdomains) {
+      int space = dom.find(' ');
+      int num = stoi(dom.substr(0, space));
+      string d = dom.substr(space + 1);
+      int i = 0,m=d.size();
+      tab[d] += num;
+      while (i < m) {
+        while (i < m && d[i] != '.')++i;
+        if (i < m) {
+          tab[d.substr(i + 1)] += num;
+          ++i;
+        }
+      }
+    }
+    vector<string>ans;
+    for (auto [dom, num] : tab) {
+      ans.push_back(to_string(num) + " " + dom);
+    }
+    return ans;
+  }
+  // 2022.10.06 - No 927
+  vector<int> threeEqualParts(vector<int>& arr) {
+    int sum = 0,n=arr.size();
+    for (int i = 0; i < n; ++i) {
+      sum += arr[i];
+    }
+    if (sum % 3 != 0) return { -1,-1 };
+    if (sum == 0) return{ 0,2 };
+    int partial = sum / 3;
+    int first = 0, second = 0, third = 0, cur = 0;
+    for (int i = 0; i < arr.size(); i++) {
+      if (arr[i] == 1) {
+        if (cur == 0) {
+          first = i;
+        }
+        else if (cur == partial) {
+          second = i;
+        }
+        else if (cur == 2 * partial) {
+          third = i;
+        }
+        cur++;
+      }
+    }
+    int len = (int)arr.size() - third;
+    if (first + len <= second && second + len <= third) {
+      int i = 0;
+      while (third + i < arr.size()) {
+        if (arr[first + i] != arr[second + i] || arr[first + i] != arr[third + i]) {
+          return { -1, -1 };
+        }
+        i++;
+      }
+      return { first + len - 1, second + len };
+    }
+    return { -1, -1 };
+  }
 };
