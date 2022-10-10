@@ -110,6 +110,39 @@ public:
     return false;
   }
   //No 56
+  vector<vector<int>> merge(vector<vector<int>>& intervals) {
+    sort(intervals.begin(), intervals.end(), [](const vector<int>& v1, const vector<int>& v2) {return (v1[0] < v2[0]) || (v1[0] == v2[0]) && v1[1] < v2[1]; });
+    vector < vector<int>>ans;
+    int i = 0, n = intervals.size();
+    while (i < n) {
+      int start = intervals[i][0];
+      int end = intervals[i][1];
+      ++i;
+      while (i < n && intervals[i][0] <= end) {
+        end = max(end,intervals[i][1]);
+        ++i;
+      }
+      ans.push_back({ start,end });
+    }
+    return ans;
+  }
+  vector<vector<int>> merge_no56(vector<vector<int>>& intervals) {
+    if (intervals.size() == 0) {
+      return {};
+    }
+    sort(intervals.begin(), intervals.end());
+    vector<vector<int>> merged;
+    for (int i = 0; i < intervals.size(); ++i) {
+      int L = intervals[i][0], R = intervals[i][1];
+      if (!merged.size() || merged.back()[1] < L) {
+        merged.push_back({ L, R });
+      }
+      else {
+        merged.back()[1] = max(merged.back()[1], R);
+      }
+    }
+    return merged;
+  }
   //No 57
   //No 58
   //No 59
