@@ -124,4 +124,100 @@ public:
     }
     return { -1, -1 };
   }
+  // 2022.10.07 - No 1800
+  int maxAscendingSum(vector<int>& nums) {
+    int n = nums.size(),ans=0,tmp=0;
+    for (int i = 0; i < n; ++i) {
+      if (i == 0) tmp = nums[i];
+      else {
+        if (nums[i] > nums[i - 1]) {
+          tmp += nums[i];
+        }
+        else {
+          tmp = nums[i];
+        }
+      }
+      ans = max(ans, tmp);
+    }
+    return ans;
+  }
+  // 2022.10.08 - No 870
+  vector<int> advantageCount(vector<int>& nums1, vector<int>& nums2) {
+    int i = 0,j = 0,n = nums1.size();
+    vector<int>ans(n,-1),flag(n,0);
+    vector<int>other;
+    vector<pair<int, int>> np1,np2;
+    for (int k = 0; k < n; ++k) {
+      np1.push_back({ nums1[k],k });
+      np2.push_back({ nums2[k],k });
+    }
+    sort(np1.begin(), np1.end(), [](const pair<int, int>& p1, const pair<int, int>& p2) {return p1.first < p2.first; });
+    sort(np2.begin(), np2.end(), [](const pair<int, int>& p1, const pair<int, int>& p2) {return p1.first < p2.first; });
+    while (i < n && j < n) {
+      auto& [n1, p1] = np1[i];
+      auto& [n2, p2] = np2[j];
+      if (n1>n2) {
+        ++i;
+        ++j;
+        ans[p2] = n1;
+        flag[p2] = 1;
+      }
+      else {
+        other.push_back(n1);
+        ++i;
+      }
+    }
+    
+    for (int k = 0; k < n; ++k) {
+      if (ans[k] == -1) {
+        ans[k] = other.back();
+        other.pop_back();
+      }
+    }
+    return ans;
+  }
+  // 2022.10.09 - No 856
+  int scoreOfParentheses(string s) {
+    stack<int>st;
+    st.push(0);
+    for (int i = 0; i < s.size(); ++i) {
+      if (s[i] == '(') st.push(0);
+      else {
+        int v = st.top();
+        st.pop();
+        int tmp = (v == 0) ? 1 : 2 * v;
+        st.top() += tmp;
+      }
+    }
+    return st.top();
+  }
+  int scoreOfParentheses_2(string s) {
+    int ans = 0, deep = 0;
+    for (int i = 0; i < s.size(); ++i) {
+      if (s[i] == '(')++deep;
+      else {
+        if (s[i - 1] == '(') ans += (1 << deep);
+        --deep;
+      }
+    }
+    return ans;
+  }
+  // 2022.10.10 - No 801
+  int minSwap(vector<int>& nums1, vector<int>& nums2) {
+    int n = nums1.size();
+    int a = 0, b = 1;
+    for (int i = 1; i < n; ++i) {
+      int at = a, bt = b;
+      a = b = n;
+      if (nums1[i] > nums1[i - 1] && nums2[i] > nums2[i - 1]) {
+        a = min(a, at);
+        b = min(b, bt+1);
+      }
+      if (nums1[i] > nums2[i - 1] && nums2[i] > nums1[i - 1]) {
+        a = min(a, bt);
+        b = min(b, at + 1);
+      }
+    }
+    return min(a, b);
+  }
 };
