@@ -190,3 +190,18 @@ void dfs(int number, int n, int location, int sum,vector<int>& nums) {//第一个参
     nums.pop_back();
   }
 }
+
+int rest_stones(vector<int>& stones) {
+  int n = stones.size();
+  priority_queue<int, vector<int>, less<int>>pq;
+  for (auto& i : stones) pq.push(i);
+  while (pq.size() >= 2) {
+    int t1 = pq.top();
+    pq.pop();
+    int t2 = pq.top();
+    pq.pop();
+    int tmp = t1 - t2;
+    if(tmp>0) pq.push(tmp);
+  }
+  return (pq.empty()) ? 0 : pq.top();
+}
