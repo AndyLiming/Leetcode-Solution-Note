@@ -220,4 +220,20 @@ public:
     }
     return min(a, b);
   }
+  bool areAlmostEqual(string s1, string s2) {
+    if (s1.size() != s2.size()) return false;
+    int n = s1.size();
+    vector<int>c1, c2;
+    int diff = 0;
+    for (int i = 0; i < n; ++i) {
+      if (s1[i] != s2[i]) {
+        ++diff;
+        c1.push_back(s1[i]);
+        c2.push_back(s2[i]);
+      }
+      if (diff > 2) return false;
+    }
+    if (diff == 0 || (diff == 2 && c1[0] == c2[1] && c1[1] == c2[0])) return true;
+    return false;
+  }
 };
