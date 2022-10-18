@@ -38,6 +38,9 @@ public:
       }
     }
   }
+  bool isconnected(int x, int y) {
+    return find(x) == find(y);
+  }
 };
 
 //class Solution {
