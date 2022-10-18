@@ -220,6 +220,7 @@ public:
     }
     return min(a, b);
   }
+  // 2022.10.11 - No 801
   bool areAlmostEqual(string s1, string s2) {
     if (s1.size() != s2.size()) return false;
     int n = s1.size();
@@ -235,5 +236,127 @@ public:
     }
     if (diff == 0 || (diff == 2 && c1[0] == c2[1] && c1[1] == c2[0])) return true;
     return false;
+  }
+  // 2022.10.12 - No 817
+  int numComponents(ListNode* head, vector<int>& nums) {
+    unordered_set<int> numsSet;
+    for (int num : nums) {
+      numsSet.emplace(num);
+    }
+    bool inSet = false;
+    int res = 0;
+    while (head != nullptr) {
+      if (numsSet.count(head->val)) {
+        if (!inSet) {
+          inSet = true;
+          res++;
+        }
+      }
+      else {
+        inSet = false;
+      }
+      head = head->next;
+    }
+    return res;
+  }
+
+  //2022.10.14 - No 940
+  int distinctSubseqII(string s) {
+    int n = s.size();
+    int MOD = 1e9 + 7;
+    vector<int>dp(26, -1);
+    for (int i = 0; i < n; ++i) {
+      long long total = 1;
+      for (int j = 0; j < 26; ++j) {
+        if (dp[j] != -1) {
+          total = (total + dp[j]) % MOD;
+        }
+      }
+      dp[s[i] - 'a'] = total;
+    }
+    long long ans = 0;
+    for (int j = 0; j < 26; ++j) {
+      if (dp[j] != -1) {
+        ans = (ans + dp[j]) % MOD;
+      }
+    }
+    return ans;
+  }
+  //2022.10.15 - No 1441
+  vector<string> buildArray(vector<int>& target, int n) {
+    vector<string>ans;
+    int cur = 1,id=0,len=target.size();
+    while (id < len) {
+      ans.push_back("Push");
+      if (target[id] == cur) {
+        ++id;
+        ++cur;
+      }
+      else {
+        ans.push_back("Pop");
+        ++cur;
+      }
+    }
+    return ans;
+  }
+  //2022.10.16 - No 886
+  bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+    UnionFind uf(n + 1);
+    vector<vector<int>>g(n + 1, vector<int>());
+    for (auto& p : dislikes) {
+      g[p[0]].push_back(p[1]);
+      g[p[1]].push_back(p[0]);
+    }
+    for (int i = 1; i <= n; ++i) {
+      for (int j = 0; j < g[i].size(); ++j) {
+        uf.connect(g[i][0], g[i][j]);
+        if (uf.isconnected(i,g[i][j])) return false;
+      }
+    }
+    return true;
+  }
+  //2022.10.17 - No 904
+  int totalFruit(vector<int>& fruits) {
+    int ans = 0,n=fruits.size();
+    unordered_map<int, int>tab;
+    int l = 0, r = 0;
+    while (l < n && r < n) {
+      tab[fruits[r]]++;
+      while (tab.size() > 2) {
+        auto it = tab.find(fruits[l]);
+        --it->second;
+        if (it->second == 0) {
+          tab.erase(it);
+        }
+        ++l;
+        }
+      ans = max(ans, r - l + 1);
+      ++r;
+      }
+    return ans;
+  }
+  //2022.10.18 - No 902
+  int atMostNGivenDigitSet(vector<string>& digits, int n) {
+    string sn = to_string(n);
+    int len = sn.size(),num_d=digits.size();
+    vector<vector<int>>dp(len + 1, vector<int>(2));
+    dp[0][1] = 1;
+    for (int i = 1; i <= len; ++i) {
+      for (int j = 0; j < num_d; ++j) {
+        if (digits[j][0] == sn[i - 1]) {
+          dp[i][1] = dp[i - 1][1];
+        }
+        else if (digits[j][0] < sn[i - 1]) {
+          dp[i][0] += dp[i - 1][1];
+        }
+        else {
+          break;
+        }
+      }
+      if (i > 1) {
+        dp[i][0] += (num_d * dp[i - 1][0] + num_d);
+      }
+    }
+    return dp[len][0] + dp[len][1];
   }
 };
