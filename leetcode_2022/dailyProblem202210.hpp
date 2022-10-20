@@ -359,4 +359,31 @@ public:
     }
     return dp[len][0] + dp[len][1];
   }
+  //2022.10.19
+  int countStudents(vector<int>& students, vector<int>& sandwiches) {
+    int n = students.size();
+    int n1 = 0,n0=0;
+    for (int i = 0; i < n; ++i) n1 += students[i];
+    n0 = n - n1;
+    for (int i = 0; i < sandwiches.size(); ++i) {
+      if (sandwiches[i] == 0 && n0 > 0) {
+        --n0;
+      }
+      else if (sandwiches[i] == 1 && n1 > 0) {
+        --n1;
+      }
+      else break;
+    }
+    return n0 + n1;
+  }
+  //2022.10.20
+  int kthGrammar(int n, int k) {
+    k = k - 1;
+    int ans = 0;
+    while (k) {
+      k &= k - 1;
+      ans ^= 1;
+    }
+    return ans;
+  }
 };
