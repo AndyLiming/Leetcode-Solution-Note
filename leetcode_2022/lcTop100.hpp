@@ -199,6 +199,60 @@ public:
   //No 82
   //No 83
   //No 84
+  int largestRectangleArea(vector<int>& heights) {
+    /*int n = heights.size();
+    vector<int>right_first_less(n, n),left_first_less(n,-1);
+    stack<int>s;
+    int i = 0,ans=0;
+    while (i < n) {
+       while (!s.empty() && heights[s.top()] >= heights[i]) {
+            s.pop();
+          }
+       left_first_less[i] = (s.empty() ?  - 1:s.top());
+      s.push(i);
+      ++i;
+    }
+    s = stack<int>();
+    i = n - 1;
+    while (i >=0) {
+      while (!s.empty() && heights[s.top()] >= heights[i]) {
+        s.pop();
+      }
+      right_first_less[i] = (s.empty() ? n : s.top());
+      s.push(i);
+      --i;
+    }
+    for (int i = 0; i < n; ++i) {
+      ans = max(ans, (right_first_less[i] - left_first_less[i] - 1) * heights[i]);
+    }
+    return ans;*/
+    int n = heights.size();
+    vector<int>right_first_less(n, n), left_first_less(n, -1);
+    stack<int>s;
+    int i = 0, ans = 0;
+    while (i < n) {
+      while (!s.empty() && heights[s.top()] > heights[i]) {
+        right_first_less[s.top()] = i;
+        s.pop();
+      }
+      s.push(i);
+      ++i;
+    }
+    s = stack<int>();
+    i = n - 1;
+    while (i >= 0) {
+      while (!s.empty() && heights[s.top()] > heights[i]) {
+        left_first_less[s.top()] = i;
+        s.pop();
+      }
+      s.push(i);
+      --i;
+    }
+    for (int i = 0; i < n; ++i) {
+      ans = max(ans, (right_first_less[i] - left_first_less[i] - 1) * heights[i]);
+    }
+    return ans;
+  }
   //No 85
   //No 86
   //No 87
