@@ -492,4 +492,35 @@ public:
     }
     return 0;
   }
+  //2022.10.26 - No 862
+  int shortestSubarray(vector<int>& nums, int k) {
+    int n = nums.size(),ans=n+1;
+    vector<long long>presum(n + 1);
+    for (int i = 0; i < n; ++i) {
+      presum[i + 1] = nums[i] + presum[i];
+    }
+    deque<int> qu;
+    for (int i = 0; i <= n; i++) {
+      long curSum = presum[i];
+      while (!qu.empty() && curSum - presum[qu.front()] >= k) {
+        ans = min(ans, i - qu.front());
+        qu.pop_front();
+      }
+      while (!qu.empty() && presum[qu.back()] >= curSum) {
+        qu.pop_back();
+      }
+      qu.push_back(i);
+    }
+    return ans < n + 1 ? ans : -1;
+  }
+  //2022.10.27 - No 1822
+  int arraySign(vector<int>& nums) {
+    int n_neg = 0;
+    for (auto& i : nums) {
+      if (i == 0) return 0;
+      else if (i < 0)++n_neg;
+    }
+    if (n_neg % 2 == 1) return -1;
+    else return 1;
+  }
 };
