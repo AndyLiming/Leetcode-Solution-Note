@@ -3,6 +3,31 @@
 #include "structures.hpp"
 class daily202210 {
 public:
+  // 2022.10.01 - No 1694
+  string reformatNumber(string number) {
+    string only_num = "";
+    for (auto& c : number) {
+      if (c >= '0' && c <= '9') only_num.push_back(c);
+    }
+    vector<string> vs;
+    int i = 0, n = only_num.size();
+    while (i < n - 4) {
+      vs.push_back(only_num.substr(i, 3));
+      i += 3;
+    }
+    if (i == (n - 2) || i == (n - 3)) vs.push_back(only_num.substr(i));
+    else {
+      vs.push_back(only_num.substr(i, 2));
+      i += 2;
+      vs.push_back(only_num.substr(i, 2));
+    }
+    string ans = vs[0];
+    for (int j = 1; j < vs.size(); ++j) {
+      ans.push_back('-');
+      ans += vs[j];
+    }
+    return ans;
+  }
   // 2022.10.02 - No 777
   bool canTransform(string start, string end) {
     int n = start.length();
@@ -259,7 +284,17 @@ public:
     }
     return res;
   }
-
+  //2022.10.13 - No 769
+  int maxChunksToSorted(vector<int>& arr) {
+    int m = 0, res = 0;
+    for (int i = 0; i < arr.size(); i++) {
+      m = max(m, arr[i]);
+      if (m == i) {
+        res++;
+      }
+    }
+    return res;
+  }
   //2022.10.14 - No 940
   int distinctSubseqII(string s) {
     int n = s.size();
@@ -386,6 +421,26 @@ public:
     }
     return ans;
   }
+  //2022.10.21 - No 901
+  class StockSpanner {
+  public:
+    StockSpanner() {
+      this->stk.push({ -1,INT_MAX });
+      this->idx = -1;
+    }
+
+    int next(int price) {
+      idx++;
+      while (price >= stk.top().second) {
+        stk.pop();
+      }
+      int ret = idx - stk.top().first;
+      stk.push({ idx, price });
+      return ret;
+    }
+    stack<pair<int, int>> stk;
+    int idx;
+  };
   //2022.10.22 - No 1235
   int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {
     vector<vector<int>>jobs;
@@ -409,6 +464,25 @@ public:
       dp[i] = max(dp[i - 1], dp[left+1] + jobs[i - 1][2]);
     }
     return dp[n];
+  }
+  //2022.10.23 - No 1768
+  string mergeAlternately(string word1, string word2) {
+    int n1 = word1.size(), n2 = word2.size();
+    int i1 = 0, i2 = 0;
+    string ans;
+    while (i1 < n1 && i2 < n2) {
+      ans.push_back(word1[i1]);
+      ans.push_back(word2[i2]);
+      ++i1;
+      ++i2;
+    }
+    while (i1 < n1) {
+      ans.push_back(word1[i1++]);
+    }
+    while (i2 < n2) {
+      ans.push_back(word2[i2++]);
+    }
+    return ans;
   }
   //2022.10.24 - No 915
   int partitionDisjoint(vector<int>& nums) {
@@ -522,5 +596,94 @@ public:
     }
     if (n_neg % 2 == 1) return -1;
     else return 1;
+  }
+  //2022.10.28 - No 907
+  int sumSubarrayMins(vector<int>& arr) {
+    int n = arr.size();
+    stack<int>st;
+    vector<int>left(n, -1),right(n,n);
+    for (int i = 0; i < n; ++i) {
+      while (!st.empty() && (arr[st.top()] >= arr[i])) st.pop();
+      if (!st.empty()) left[i] = i-st.top();
+      else left[i] = i+1;
+      st.push(i);
+    }
+    st = stack<int>();
+    for (int i = n - 1; i >= 0; --i) {
+      while(!st.empty() && (arr[st.top()] > arr[i])) st.pop();
+      if (!st.empty()) right[i] = st.top()-i;
+      else right[i] = n-i;
+      st.push(i);
+    }
+    long long ans = 0, M=1e9+7;
+    for (int i = 0; i < n; ++i) {
+      ans = (ans+(long long)arr[i]*left[i] * right[i]) % M;
+    }
+    return ans;
+  }
+  //2022.10.29 - No 1773
+  int countMatches(vector<vector<string>>& items, string ruleKey, string ruleValue) {
+    unordered_map<string, int>key{ {"type",0},{"color",1},{"name",2} };
+    int id = key[ruleKey];
+    int ans = 0;
+    for (auto& it : items) {
+      if (it[id] == ruleValue)++ans;
+    }
+    return ans;
+  }
+  //2022.10.30 - No 784
+  void dfslcp784(string s, int id, string cur, vector<string>& ans) {
+    if (id == s.size()) {
+      ans.push_back(cur);
+      return;
+    }
+    if (isalpha(s[id])) {
+      char l = s[id],u=s[id];
+      if (islower(s[id])) {
+        l = s[id];
+        u = toupper(s[id]);
+      }
+      else {
+        u = s[id];
+        l = tolower(s[id]);
+      }
+      cur.push_back(l);
+      dfslcp784(s, id + 1, cur, ans);
+      cur.pop_back();
+      cur.push_back(u);
+      dfslcp784(s, id + 1, cur, ans);
+      cur.pop_back();
+    }
+    else {
+      cur.push_back(s[id]);
+      dfslcp784(s, id + 1, cur, ans);
+      cur.pop_back();
+    }
+  }
+  vector<string> letterCasePermutation(string s) {
+    int id = 0;
+    string cur = "";
+    vector<string>ans;
+    dfslcp784(s, id, cur, ans);
+    return ans;
+  }
+  //2022.10.31 - No 481
+  int magicalString(int n) {
+    vector<int>s{ 1,2,2 };
+    if (n <= 3) return 1;
+    int cur = 1, j = 2,len=3;
+    while (len < n) {
+      int num = s[j];
+      for (int i = 0; i < num; ++i) s.push_back(cur);
+      cur = cur + 1;
+      if (cur > 2)cur -= 2;
+      ++j;
+      len += num;
+    }
+    int ans = 0;
+    for (int i = 0; i < n; ++i) {
+      if (s[i] == 1) ++ans;
+    }
+    return ans;
   }
 };
