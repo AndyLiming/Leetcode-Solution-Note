@@ -42,21 +42,3 @@ public:
     return find(x) == find(y);
   }
 };
-
-//class Solution {
-//public:
-//  //No 1
-//
-//  //No 2
-//  
-//  //No 3
-//  
-//  //No 4
-//};
-//int main() {
-//  // check test
-//  //auto check = solve( & Solution::reinitializePermutation);
-//  //check(6,8);
-//  Solution so;
-//}
-//Settings;
