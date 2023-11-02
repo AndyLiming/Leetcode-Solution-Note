@@ -205,3 +205,51 @@ int rest_stones(vector<int>& stones) {
   }
   return (pq.empty()) ? 0 : pq.top();
 }
+
+int num_not_safe(string s) {
+  if (s.size() < 3) return 0;
+  int n = s.size();
+  char c1 = s[0], c2 = s[0];
+  int nc1 = 1, nc2 = 0;
+  long long ans = 0;
+  for (auto c : s) {
+    if (c == c1) ++nc1;
+    else {
+      c2 = c;
+      ++nc2;
+    }
+  }
+  if (nc2 == 0) return 0;
+  nc1 = 0; 
+  nc2 = 0;
+  vector<vector<int>>dp(n, vector<int>(2, 0));
+  for (int i = 0; i < 3; ++i) {
+    if (s[i] == c1)++nc1;
+    else ++nc2;
+  }
+  if (nc1 == 1) dp[2][0] = 1;
+  if (nc2 == 1) dp[2][1] = 1;
+  ans += (long long)dp[2][0];
+  ans += (long long)dp[2][1];
+  for (int i = 3; i < n; ++i) {
+    if (s[i] == c1) {
+      dp[i][0] = 0;
+      dp[i][1] = dp[i - 1][1];
+    }
+    else {
+      dp[i][1] = 0;
+      dp[i][0] = dp[i - 1][0];
+    }
+    int tmp_nc1 = 0, tmp_nc2 = 0;
+    for (int d = i; d >= i - 2; --d) {
+      if (s[d] == c1)++tmp_nc1;
+      if (s[d] == c2)++tmp_nc2;
+    }
+    if (tmp_nc1 == 1)++dp[i][0];
+    if (tmp_nc2 == 1)++dp[i][1];
+    ans += (long long)dp[i][0];
+    ans += (long long)dp[i][1];
+  }
+  return ans;
+}
+

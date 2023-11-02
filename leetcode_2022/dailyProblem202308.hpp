@@ -427,4 +427,61 @@ public:
     }
     return n;
   }
+  //class Codec {
+  //public:
+
+  //  // Encodes a tree to a single string.
+  //  string serialize(TreeNode* root) {
+
+  //  }
+
+  //  // Decodes your encoded data to tree.
+  //  TreeNode* deserialize(string data) {
+
+  //  }
+  //};
+  bool check_repair_num(long long time, vector<int>& ranks,int cars) {
+    long long cnt = 0;
+    for (int i = 0; i < ranks.size();++i) {
+      long long r = ranks[i];
+      cnt += sqrt(time / r);
+    }
+    return cnt >= (long long)cars;
+  }
+  long long repairCars(vector<int>& ranks, int cars) {
+    long long low = 1, high = (long long)ranks[0] * (long long)cars * (long long)cars;
+    while (low < high) {
+      long long mid = (high + low) / 2;
+      if (check_repair_num(mid, ranks, cars)) high = mid;
+      else low = mid + 1;
+    }
+    return low;
+  }
+
+  //
+  bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+    vector<int>in_degree(numCourses);
+    vector<vector<int>>connect(numCourses, vector<int>());
+    for (auto pre : prerequisites) {
+      in_degree[pre[0]]++;
+      connect[pre[1]].push_back(pre[0]);
+    }
+    queue<int>q;
+    int cnt = 0;
+    for (int i = 0; i < numCourses; ++i) {
+      if (in_degree[i] == 0)q.push(i);
+    }
+    while (!q.empty()) {
+      int cur = q.front();
+      q.pop();
+      ++cnt;
+      for (auto nx : connect[cur]) {
+        if (in_degree[nx] > 0) {
+          --in_degree[nx];
+          if(in_degree[nx]==0) q.push(nx);
+        }
+      }
+    }
+    return cnt == numCourses;
+  }
 };

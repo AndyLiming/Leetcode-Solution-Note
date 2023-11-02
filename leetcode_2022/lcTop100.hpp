@@ -322,7 +322,76 @@ public:
     //No 51
   //No 52
   //No 53
+  int orangesRotting(vector<vector<int>>& grid) {
+    if (grid.empty() || grid[0].empty()) return 0;
+    int m = grid.size(), n = grid[0].size();
+    vector<vector<int>>rotted(m, vector<int>(n, 0));
+    vector<vector<int>>dir = { {0,1},{0,-1},{1,0},{-1,0} };
+    int time = 0,num=0,total=0;
+    queue<vector<int>>q;
+    for (int i = 0; i < m; ++i) {
+      for (int j = 0; j < n; ++j) {
+        if (grid[i][j] > 0) ++total;
+        if (grid[i][j] == 2) {
+          q.push({ i,j,0 });
+          rotted[i][j] = 1;
+        }
+      }
+    }
+    while (!q.empty()) {
+      auto cur = q.front();
+      int r = cur[0], c = cur[1],t=cur[2];
+      time = max(time, t);
+      q.pop();
+      ++num;
+      for (int d = 0; d < 4; ++d) {
+        int nr = r + dir[d][0], nc = c + dir[d][1];
+        if (nr >= 0 && nr < m && nc >= 0 && nc < n && grid[nr][nc] == 1 && rotted[nr][nc] == 0) {
+          q.push({ nr,nc,t + 1 });
+          rotted[nr][nc] = 1;
+        }
+      }
+    }
+    return num==total?time:-1;
+  }
   //No 54
+  class Trie {
+    vector<Trie*>children;
+    bool is_end;
+
+    Trie* search_base(string prefix) {
+      Trie* node = this;
+      for (char c : prefix) {
+        if (!node->children[c - 'a']) return nullptr;
+        node = node->children[c - 'a'];
+      }
+      return node;
+    }
+  public:
+    Trie() {
+      children = vector<Trie*>(26);
+      is_end = false;
+    }
+
+    void insert(string word) {
+      Trie* node = this;
+      for (char c : word) {
+        if (!node->children[c - 'a']) node->children[c - 'a'] = new Trie();
+        node = node->children[c - 'a'];
+      }
+      node->is_end = true;
+    }
+
+    bool search(string word) {
+      Trie* node = this->search_base(word);
+      return node != nullptr && node->is_end;
+    }
+
+    bool startsWith(string prefix) {
+      Trie* node = this->search_base(prefix);
+      return node != nullptr;
+    }
+  };
   /*回溯*/ 
   //No 55
   bool canJump(vector<int>& nums) {
@@ -389,9 +458,32 @@ public:
   /*二分查找*/
   //No 63
   //No 64
+  bool searchMatrix2(vector<vector<int>>& matrix, int target) {
+    if (matrix.empty() || matrix[0].empty()) return false;
+    int m = matrix.size(), n = matrix[0].size();
+    if (target<matrix[0][0] || target>matrix[m - 1][n - 1]) return false;
+    int low = 0, high = m * n - 1;
+    while (low <= high) {
+      int mid = (high - low) / 2 + low;
+      int val = matrix[mid / n][mid % n];
+      if (target == val) return true;
+      else if (target > val) low = mid + 1;
+      else high = mid - 1;
+    }
+    return false;
+  }
   //No 65
   //No 66
   //No 67
+  int findMin(vector<int>& nums) {
+    int low = 0, high = nums.size() - 1;
+    while (low < high) {
+      int p = low + (high - low) / 2;
+      if (nums[p] < nums[high]) high = p;
+      else low = p + 1;
+    }
+    return nums[low];
+  }
   //No 68
   /*栈*/ 
   //No 69
